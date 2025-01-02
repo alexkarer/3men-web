@@ -1,20 +1,20 @@
 <div class="background">
     <div class="d-flex align-items-start">
-        <div class="d-flex flex-column">
+        <div class="players">
             @for (player of players; track $index) {
-                <three-men-player [player]="player" [activeTurn]="activePlayer === player.id" (delete)="deletePlayer(player)"></three-men-player>
+                <three-men-player [player]="player" [activeTurn]="activePlayer === player.id" [gameStarted]="hasGameStarted()" (delete)="deletePlayer(player)"></three-men-player>
             }
-            <input type="text" class="m-2 form-control" placeholder="Player name" [(ngModel)]="newPlayerName">
-            @if (currentGamePhase === GamePhase.BEFORE_GAME) {
+            @if (!hasGameStarted()) {
+                <input type="text" class="m-2 form-control" placeholder="Player name" [(ngModel)]="newPlayerName">
                 <button type="button" class="m-2 btn btn-primary" (click)="addPlayer()">Add Player</button>
             }
         </div>
         <div id="dice-box">
             <div class="d-flex justify-content-center">
-                @if (currentGamePhase === GamePhase.BEFORE_GAME) {
+                @if (!hasGameStarted()) {
                     <button type="button" [disabled]="players.length < 1" class="mt-3 btn btn-success" (click)="startGame()">Start Game</button>
                 } @else {
-                    <button type="button" [disabled]="isDiceRollingDisabled" class="mt-3 btn btn-success" (click)="roll()">Roll</button>
+                    <button type="button" [disabled]="isDiceRollingDisabled" class="mt-3 btn btn-primary" (click)="roll()">Roll</button>
                 }
             </div>
         </div>

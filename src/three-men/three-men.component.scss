@@ -8,6 +8,12 @@
     position: fixed;
 }
 
+.players {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+}
+
 #dice-box {
     position: relative;
     box-sizing: border-box;
