@@ -15,11 +15,13 @@
                     <button type="button" [disabled]="players.length < 2" class="btn btn-success btn-lg" (click)="startGame()">Start Game</button>
                 } @else {
                     <button type="button" [disabled]="isDiceRollingDisabled" class="btn btn-primary btn-lg" (click)="roll()">Roll</button>
-                    <h2 class="text-white">{{ GamePhaseText }}</h2>
                     <button type="button" class="btn btn-danger btn-lg" (click)="resetGame()">Reset</button>
                 }
             </div>
         </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-end">
+        <h2 class="text-white">{{ GamePhaseText }}</h2>
     </div>
     <three-men-toasts-wrapper [toast]="currentToast"></three-men-toasts-wrapper>
 </div>

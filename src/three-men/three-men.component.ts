@@ -28,7 +28,7 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this._diceBox = new DiceBox("#dice-box", {
-      assetPath: "./dice-box/",
+      assetPath: "./3men-web/dice-box/",
       theme: "default",
       offscreen: true,
       scale: 5

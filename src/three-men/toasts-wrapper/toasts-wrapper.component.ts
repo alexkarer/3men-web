@@ -7,7 +7,7 @@ import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [NgbToastModule],
   templateUrl: './toasts-wrapper.component.html',
   styleUrl: './toasts-wrapper.component.scss',
-  host: { class: 'toast-container position-fixed top-0 start-50 translate-middle-x p-3', style: 'z-index: 1200' },
+  host: { class: 'toast-container position-fixed top-50 start-50 translate-middle p-3', style: 'z-index: 1200' },
 })
 export class ToastsWrapperComponent {
 
