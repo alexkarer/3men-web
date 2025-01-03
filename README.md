@@ -46,3 +46,8 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Deployment
+
+This application is deployed using Github Pages, which is currently done manually, to deploy run the following command:
+`ng deploy --base-href=/3men-web/ --repo=https://github.com/alexkarer/3men-web`

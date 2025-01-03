@@ -25,7 +25,7 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this._diceBox = new DiceBox("#dice-box", {
-      assetPath: "/dice-box/",
+      assetPath: "./dice-box/",
       theme: "default",
       offscreen: true,
       scale: 5
@@ -64,6 +64,16 @@ export class AppComponent implements AfterViewInit {
     } else if (this.currentGamePhase === GamePhase.MAIN_GAME) {
       this._diceBox.roll("2d6").then((results: { value: number; }[]) => this.handleMainGameRoll(results));
     }
+  }
+
+  resetGame(): void {
+    this.activePlayer = -1;
+    this.currentGamePhase = GamePhase.BEFORE_GAME;
+    this.players.forEach(p => {
+      p.isThreeMen = false;
+      p.hasTakenTurnInMainGame = false;
+    })
+    this.isDiceRollingDisabled = false;
   }
 
   private handleThreeMenDetRoll(results: { value: number; }[]): void {
@@ -121,16 +131,6 @@ export class AppComponent implements AfterViewInit {
   private continueWithMainGame(): void {
     this.currentGamePhase = GamePhase.MAIN_GAME;
     this._diceBox.add("1d6").then(() => this.isDiceRollingDisabled = false);
-  }
-
-  private resetGame(): void {
-    this.activePlayer = -1;
-    this.currentGamePhase = GamePhase.BEFORE_GAME;
-    this.players.forEach(p => {
-      p.isThreeMen = false;
-      p.hasTakenTurnInMainGame = false;
-    })
-    this.isDiceRollingDisabled = false;
   }
 }
 
