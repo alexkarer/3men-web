@@ -10,14 +10,16 @@
             }
         </div>
         <div id="dice-box">
-            <div class="d-flex justify-content-evenly">
+            <div class="mt-3 d-flex justify-content-evenly">
                 @if (!hasGameStarted()) {
-                    <button type="button" [disabled]="players.length < 2" class="mt-3 btn btn-success btn-lg" (click)="startGame()">Start Game</button>
+                    <button type="button" [disabled]="players.length < 2" class="btn btn-success btn-lg" (click)="startGame()">Start Game</button>
                 } @else {
-                    <button type="button" [disabled]="isDiceRollingDisabled" class="m-3 btn btn-primary btn-lg" (click)="roll()">Roll</button>
-                    <button type="button" class="m-3 btn btn-danger btn-lg" (click)="resetGame()">Reset</button>
+                    <button type="button" [disabled]="isDiceRollingDisabled" class="btn btn-primary btn-lg" (click)="roll()">Roll</button>
+                    <h2 class="text-white">{{ GamePhaseText }}</h2>
+                    <button type="button" class="btn btn-danger btn-lg" (click)="resetGame()">Reset</button>
                 }
             </div>
         </div>
     </div>
+    <three-men-toasts-wrapper [toast]="currentToast"></three-men-toasts-wrapper>
 </div>

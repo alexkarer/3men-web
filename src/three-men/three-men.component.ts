@@ -4,11 +4,12 @@ import DiceBox from "@3d-dice/dice-box";
 import { Player } from './player';
 import { PlayerComponent } from "./player/player.component";
 import { FormsModule } from '@angular/forms';
+import { ThreeMenToast, ToastsWrapperComponent } from './toasts-wrapper/toasts-wrapper.component';
 
 @Component({
   selector: 'three-men-root',
   standalone: true,
-  imports: [PlayerComponent, FormsModule],
+  imports: [PlayerComponent, FormsModule, ToastsWrapperComponent],
   templateUrl: './three-men.component.html',
   styleUrl: './three-men.component.scss'
 })
@@ -16,12 +17,14 @@ export class AppComponent implements AfterViewInit {
 
   private _diceBox?: DiceBox;
   
-  public players: Player[] = [];
-  public activePlayer: number = -1;
-  public newPlayerName: string = '';
+  players: Player[] = [];
+  activePlayer: number = -1;
+  newPlayerName: string = '';
 
-  public isDiceRollingDisabled: boolean = false;
-  public currentGamePhase: GamePhase = GamePhase.BEFORE_GAME;
+  isDiceRollingDisabled: boolean = false;
+  currentGamePhase: GamePhase = GamePhase.BEFORE_GAME;
+
+  currentToast?: ThreeMenToast = undefined;
 
   ngAfterViewInit(): void {
     this._diceBox = new DiceBox("#dice-box", {
@@ -76,9 +79,18 @@ export class AppComponent implements AfterViewInit {
     this.isDiceRollingDisabled = false;
   }
 
+  get GamePhaseText(): string {
+    switch (this.currentGamePhase) {
+      case GamePhase.BEFORE_GAME: return 'Pre Game';
+      case GamePhase.DETERMINE_THREE_MEN: return 'Determening 3-Men, ' + this.players[this.activePlayer].name + "'s Turn";
+      case GamePhase.MAIN_GAME: return 'Main Game, ' + this.players[this.activePlayer].name + "'s Turn";
+    }
+  }
+
   private handleThreeMenDetRoll(results: { value: number; }[]): void {
     if (results[0].value === 3) {
       this.players[this.activePlayer].isThreeMen = true;
+      this.showToastMessage('3-Men', this.players[this.activePlayer].name + ' is a 3-Men!');
     }
 
     this.nextPlayer();
@@ -96,23 +108,40 @@ export class AppComponent implements AfterViewInit {
     }
 
     if ((results[0].value === 1 && results[1].value === 2) || (results[0].value === 2 && results[1].value === 1)) {
-      // all three men need to drink
+      this.showToastMessage('3-Men!', 'All 3-Men Drink.');
     } else if ((results[0].value === 1 && results[1].value === 4) || (results[0].value === 4 && results[1].value === 1)) {
-      // thumb master
+      this.showToastMessage('Thumb Master!', 'All thumbs to the table, slowest needs to drink.');
     } else if ((results[0].value === 4 && results[1].value === 6) || (results[0].value === 6 && results[1].value === 4)) {
-      // invent a rule
+      this.showToastMessage('Invent a rule!', 'Invent a rule that all players have to follow until the game ends.');
     } else if (results[0].value === results[1].value) {
-      // distribute sips equal to dice value
+      if (threeMenNeedToDrink) {
+        this.showToastMessage('Doubles + 3-Men!', 'Distribute sips equal to dice value and all 3-Men drink twice.');
+      } else {
+        this.showToastMessage('Doubles!', 'Distribute sips equal to dice value.');
+      }
     } else if (results[0].value + results[1].value === 7) {
-      //  The player sitting to the left of the roller needs to drin
+      if (threeMenNeedToDrink) {
+        this.showToastMessage('Left neighbor + 3-Men!', 'The player sitting to the left of the roller and all 3-Men drink need to drink.');
+      } else {
+        this.showToastMessage('Left neighbor', 'The player sitting to the left of the roller needs to drink.');
+      }
     } else if (results[0].value + results[1].value === 9) {
-      //  The player sitting to the left of the roller needs to drin
+      if (threeMenNeedToDrink) {
+        this.showToastMessage('Right neighbor + 3-Men!', 'The player sitting to the right of the roller and all 3-Men drink need to drink.');
+      } else {
+        this.showToastMessage('Right neighbor', 'The player sitting to the right of the roller needs to drink.');
+      }
     } else {
-      if (!threeMenNeedToDrink) {
+      if (threeMenNeedToDrink) {
+        this.showToastMessage('3-Men!', 'All 3-Men drink.');
+      } else {
         this.players[this.activePlayer].hasTakenTurnInMainGame = true;
         this.nextPlayer();
         if (this.players[this.activePlayer].hasTakenTurnInMainGame) {
+          this.showToastMessage('Game Over!', 'Thanks for playing!');
           this.resetGame();
+        } else {
+          this.showToastMessage('Nothing!', this.players[this.activePlayer].name + ' takes their turn.');
         }
       }
     }
@@ -131,6 +160,14 @@ export class AppComponent implements AfterViewInit {
   private continueWithMainGame(): void {
     this.currentGamePhase = GamePhase.MAIN_GAME;
     this._diceBox.add("1d6").then(() => this.isDiceRollingDisabled = false);
+    this.showToastMessage('Main Game Start!', 'Get your Drinks ready.');
+  }
+
+  private showToastMessage(header: string, text: string): void {
+    this.currentToast = {
+      header: header,
+      text: text
+    }
   }
 }
 

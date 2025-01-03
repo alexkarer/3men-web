@@ -1,0 +1,5 @@
+@for (toast of toasts; track $index) {
+    <ngb-toast [autohide]="true" [delay]="5000" (hidden)="remove(toast)" [header]="toast.header">
+        {{ toast.text }}
+    </ngb-toast>
+}

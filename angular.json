@@ -99,7 +99,11 @@
           }
         },
         "deploy": {
-          "builder": "angular-cli-ghpages:deploy"
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "/3men-web/",
+            "repo": "https://github.com/alexkarer/3men-web"
+          }
         }
       }
     }

@@ -50,4 +50,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Deployment
 
 This application is deployed using Github Pages, which is currently done manually, to deploy run the following command:
-`ng deploy --base-href=/3men-web/ --repo=https://github.com/alexkarer/3men-web`
+`ng deploy`
